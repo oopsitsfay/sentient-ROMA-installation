@@ -19,7 +19,7 @@ The rules are one claim per holding wallet per collection, one spot per receivin
 
 ## Running on Vercel
 
-- **Storage:** claims are stored in a private Vercel Blob store, through `BLOB_READ_WRITE_TOKEN`.
+- **Storage:** claims are stored in Upstash Redis, through `KV_REST_API_URL` and `KV_REST_API_TOKEN` (set when Upstash is connected in Vercel).
 - **Admin page:** `/admin` needs `ADMIN_KEY` and has a CSV download for the mint list.
 - **Closing claims:** set `GTD_CLOSED=1`.
 - **Other RPCs:** set `RPC_ROBINHOOD` or `RPC_ETHEREUM` to use RPCs other than the default public ones.
