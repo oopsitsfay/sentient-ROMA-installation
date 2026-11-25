@@ -1,19 +1,123 @@
-{
-  "chain": {
-    "name": "Robinhood Chain",
-    "rpc": "PASTE_ROBINHOOD_CHAIN_RPC_URL"
+[
+  {
+    "id": "stonkbrokers",
+    "name": "StonkBrokers",
+    "x": "ClutchMarkets",
+    "chain": "robinhood",
+    "contract": "0x539cdd042c2f3d93ebc5be7dfff0c79f3b4fabf0",
+    "opensea": "https://opensea.io/collection/stonkbrokers-434284142",
+    "image": "/partners/stonkbrokers.jpg",
+    "color": "#2f9e74",
+    "spots": null
   },
-  "collections": [
-    { "id": "clutchmarkets", "name": "Clutch Markets", "x": "ClutchMarkets", "contract": "", "standard": "erc721", "color": "#2f9e74" },
-    { "id": "funkari", "name": "Funkari", "x": "FunkariNft", "contract": "", "standard": "erc721", "color": "#e0679a" },
-    { "id": "blokyz", "name": "Blokyz", "x": "OriginalBlokyz", "contract": "", "standard": "erc721", "color": "#3f7be0" },
-    { "id": "alphacentaurikid", "name": "Alpha Centauri Kid", "x": "lphaCentauriKid", "contract": "", "standard": "erc721", "color": "#7a52d6" },
-    { "id": "ccff00club", "name": "CCFF00 Club", "x": "CCFF00club", "contract": "", "standard": "erc721", "color": "#8fae00" },
-    { "id": "rektcoin", "name": "Rekt Coin", "x": "RektCoin", "contract": "", "standard": "erc721", "color": "#d6453d" },
-    { "id": "themutualfun", "name": "The Mutual Fun", "x": "themutualfun", "contract": "", "standard": "erc721", "color": "#e08a2c" },
-    { "id": "suitedapes", "name": "The Suited Apes", "x": "TheSuitedApes", "contract": "", "standard": "erc721", "color": "#4a4f63" },
-    { "id": "vaultlings", "name": "Vaultlings", "x": "VaultlingsNFT", "contract": "", "standard": "erc721", "color": "#2a8fa8" },
-    { "id": "robinwifhat", "name": "Robin Wif Hat", "x": "RobinWifHat", "contract": "", "standard": "erc721", "color": "#9a4ec2" },
-    { "id": "yieldfields", "name": "Yield Fields", "x": "YieldFields_Rh", "contract": "", "standard": "erc721", "color": "#4f9a3a" }
-  ]
-}
+  {
+    "id": "funkari",
+    "name": "Funkari",
+    "x": "FunkariNft",
+    "chain": "ethereum",
+    "contract": "0x1fafd33d882e1c275c61066019a23c1999b5006e",
+    "opensea": "https://opensea.io/collection/funkari-nft",
+    "image": "/partners/funkari.jpg",
+    "color": "#d9619a",
+    "spots": null
+  },
+  {
+    "id": "blokyz",
+    "name": "Blokyz",
+    "x": "OriginalBlokyz",
+    "chain": "robinhood",
+    "contract": "",
+    "opensea": "https://opensea.io/collection/originalblokyz",
+    "image": "",
+    "color": "#3f7be0",
+    "spots": null
+  },
+  {
+    "id": "hearthandreapers",
+    "name": "Hearth and Reapers",
+    "x": "lphaCentauriKid",
+    "chain": "ethereum",
+    "contract": "0x149b579e48b7f03c45b5c96ffd44555b2f9ee8a3",
+    "opensea": "https://opensea.io/collection/hearthandreapers",
+    "image": "/partners/hearthandreapers.jpg",
+    "color": "#7a52d6",
+    "spots": null
+  },
+  {
+    "id": "ccff00",
+    "name": "CCFF00 Club",
+    "x": "CCFF00club",
+    "chain": "robinhood",
+    "contract": "0x505a22ffed8d37ebe580ffd98d2cdb0021189146",
+    "opensea": "https://opensea.io/collection/ccff00-161927574",
+    "image": "/partners/ccff00.jpg",
+    "color": "#7f9c00",
+    "spots": null
+  },
+  {
+    "id": "rektguy",
+    "name": "rektguy",
+    "x": "RektCoin",
+    "chain": "ethereum",
+    "contract": "0xb852c6b5892256c264cc2c888ea462189154d8d7",
+    "opensea": "https://opensea.io/collection/rektguy",
+    "image": "/partners/rektguy.jpg",
+    "color": "#d6453d",
+    "spots": null
+  },
+  {
+    "id": "themutualfun",
+    "name": "The Mutual Fun",
+    "x": "themutualfun",
+    "chain": "robinhood",
+    "contract": "0x1215d567dc4e0f2999dcc262d78d1586ff97154f",
+    "opensea": "https://opensea.io/collection/themutualfun",
+    "image": "/partners/themutualfun.jpg",
+    "color": "#d9822b",
+    "spots": null
+  },
+  {
+    "id": "suitedapesociety",
+    "name": "Suited Ape Society",
+    "x": "TheSuitedApes",
+    "chain": "robinhood",
+    "contract": "0xe638f58c87258ece6c0eddc46f70327663635c69",
+    "opensea": "https://opensea.io/collection/suited-ape-society",
+    "image": "/partners/suitedapesociety.jpg",
+    "color": "#4a4f63",
+    "spots": null
+  },
+  {
+    "id": "vaultlings",
+    "name": "Vaultlings",
+    "x": "VaultlingsNFT",
+    "chain": "robinhood",
+    "contract": "0x23708e501cbeaa92f45183197c673fdabf993484",
+    "opensea": "https://opensea.io/collection/vaultlings",
+    "image": "/partners/vaultlings.jpg",
+    "color": "#2a8fa8",
+    "spots": null
+  },
+  {
+    "id": "wifoutlaws",
+    "name": "Wif Outlaws",
+    "x": "RobinWifHat",
+    "chain": "robinhood",
+    "contract": "0x12a4c7659a4b7c4a2870b5167c4f8b014c7fa690",
+    "opensea": "https://opensea.io/collection/wif-outlaws",
+    "image": "/partners/wifoutlaws.jpg",
+    "color": "#9a4ec2",
+    "spots": null
+  },
+  {
+    "id": "yieldfielddeeds",
+    "name": "Yield Field Deeds",
+    "x": "YieldFields_Rh",
+    "chain": "robinhood",
+    "contract": "0x231142e88f523b0a4f46d2d79faab2ce1828e43a",
+    "opensea": "https://opensea.io/collection/yield-field-deeds",
+    "image": "/partners/yieldfielddeeds.jpg",
+    "color": "#4f9a3a",
+    "spots": null
+  }
+]

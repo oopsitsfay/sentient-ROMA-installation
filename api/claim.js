@@ -1,30 +1,33 @@
-import { getCollection, isAddress, norm, holds, saveClaim, countFor, readBody, send } from '../lib/core.js';
+import { OPEN, getCollection, isAddress, holds, claimable, claimCounts, normalizeHandle, saveClaim, rateLimited, sameOrigin, readBody, send, handle } from "../lib/core.js";
 
-// Step 2: record the claim. Every check from /api/verify is repeated here.
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return send(res, 405, { error: 'POST only' });
-  if (process.env.WL_CLOSED === '1') return send(res, 403, { error: 'Claims are closed.' });
-  const body = await readBody(req);
-  const c = getCollection(body.collection);
-  if (!c) return send(res, 400, { error: 'Unknown collection.' });
-  if (!isAddress(body.holderWallet)) return send(res, 400, { error: 'Holding wallet is not a valid address.' });
-  const claimRaw = body.sameWallet ? body.holderWallet : body.claimWallet;
-  if (!isAddress(claimRaw)) return send(res, 400, { error: 'Claim wallet is not a valid address.' });
-  const x = String(body.xHandle || '').trim().replace(/^@/, '');
-  if (!/^[A-Za-z0-9_]{1,15}$/.test(x)) return send(res, 400, { error: 'Enter your X handle (letters, numbers, underscore).' });
+// Step 2: record the GTD spot. Every check from /api/verify runs again here.
+export default handle(async (req, res) => {
+  if (req.method !== "POST") return send(res, 405, { error: "method_not_allowed", message: "POST only" });
+  if (!OPEN) return send(res, 403, { error: "closed", message: "GTD claims are closed." });
+  if (!sameOrigin(req)) return send(res, 403, { error: "forbidden_origin", message: "Use the claim page." });
+  if (rateLimited(req)) return send(res, 429, { error: "rate_limited", message: "Too many attempts. Wait a minute and try again." });
+  const b = await readBody(req);
+  const c = getCollection(b.collection);
+  if (!c || !claimable(c)) return send(res, 400, { error: "unknown_collection", message: "This collection isn't open for claims yet." });
+  if (!isAddress(b.holderWallet)) return send(res, 400, { error: "invalid_address", message: "The holding wallet isn't a valid address." });
+  const claimRaw = b.sameWallet ? b.holderWallet : b.claimWallet;
+  if (!isAddress(claimRaw)) return send(res, 400, { error: "invalid_address", message: "Paste a valid wallet to receive the GTD spot." });
+  const x = normalizeHandle(b.xHandle);
+  if (!x || x.toLowerCase() === "niblekins") return send(res, 400, { error: "invalid_x_handle", message: "Enter your own X username." });
 
-  const holderWallet = norm(body.holderWallet);
-  const claimWallet = norm(claimRaw);
-  if (!holds(c.id, holderWallet)) return send(res, 403, { error: `This wallet is not in the ${c.name} holder snapshot.` });
-  if (c.spots && (await countFor(c.id)) >= c.spots) return send(res, 403, { error: `All ${c.name} spots are taken.` });
+  const holderWallet = b.holderWallet.trim().toLowerCase();
+  const claimWallet = claimRaw.trim().toLowerCase();
+  if (!(await holds(c, holderWallet))) return send(res, 403, { error: "not_holder", message: `This wallet doesn't hold a ${c.name} NFT.` });
+  if (c.spots != null && ((await claimCounts())[c.id] ?? 0) >= c.spots) return send(res, 409, { error: "full", message: `All ${c.name} GTD spots are taken.` });
 
-  const rec = { collection: c.id, holderWallet, claimWallet, x, at: new Date().toISOString() };
-  const r = await saveClaim(rec);
+  const r = await saveClaim({ collection: c.id, holderWallet, claimWallet, x, at: new Date().toISOString() });
   if (!r.ok) {
-    const msg = r.reason === 'holder_used'
-      ? `This holding wallet has already claimed with ${c.name}.`
-      : 'That claim wallet already has a spot.';
-    return send(res, 409, { error: msg });
+    const message = {
+      holder_used: `This wallet has already claimed a GTD spot with ${c.name}.`,
+      claim_used: "That wallet already has a GTD spot.",
+      x_used: `@${x} has already claimed a GTD spot.`,
+    }[r.reason];
+    return send(res, 409, { error: r.reason, message });
   }
-  send(res, 200, { ok: true, claimWallet });
-}
+  send(res, 201, { ok: true, claimWallet });
+});

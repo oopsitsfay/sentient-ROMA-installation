@@ -1,17 +1,34 @@
-import { collections, snapshotInfo, allClaims, send } from '../lib/core.js';
+import { COLLECTIONS, OPEN, CHAIN_NAMES, claimable, claimCounts, snapshotCount, send, handle } from "../lib/core.js";
 
-// Public list of collections with snapshot size and spots taken.
-export default async function handler(req, res) {
-  const snap = snapshotInfo();
-  const claims = await allClaims();
+// Public list of partner collections with spots claimed. Holder lists are never published.
+export default handle(async (req, res) => {
+  let counts = {};
+  let storage = true;
+  try {
+    counts = await claimCounts();
+  } catch (err) {
+    console.error("claim counts unavailable", err.message);
+    storage = false;
+  }
+  const open = OPEN && storage;
   send(res, 200, {
-    open: process.env.WL_CLOSED !== '1',
-    collections: collections.map((c) => ({
-      id: c.id, name: c.name, x: c.x, color: c.color, image: c.image || null,
-      spots: c.spots ?? null,
-      claimed: claims.filter((k) => k.collection === c.id).length,
-      holders: snap[c.id]?.count ?? 0,
-      ready: (snap[c.id]?.count ?? 0) > 0,
-    })),
+    open,
+    collections: COLLECTIONS.map((c) => {
+      const claimed = counts[c.id] ?? 0;
+      return {
+        id: c.id,
+        name: c.name,
+        x: c.x,
+        chain: c.chain,
+        chainName: CHAIN_NAMES[c.chain] ?? c.chain,
+        image: c.image || null,
+        opensea: c.opensea || null,
+        color: c.color,
+        spots: c.spots,
+        claimed,
+        holders: snapshotCount(c.id),
+        open: open && claimable(c) && (c.spots == null || claimed < c.spots),
+      };
+    }),
   });
-}
+});

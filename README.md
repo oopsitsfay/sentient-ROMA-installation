@@ -1,38 +1,39 @@
 # Niblekins: partner GTD claim
 
-A whitelist (GTD) claim site for holders of Niblekins partner collections on Robinhood Chain.
-There's no wallet connection. A holder picks their collection, pastes the wallet that holds the NFT,
-and chooses which wallet gets the GTD spot.
+A standalone claim page for holders of Niblekins partner NFT collections, on Robinhood Chain and Ethereum. There's no
+wallet connection. A holder picks their collection and pastes the wallet that holds the NFT. The page checks that
+wallet against the holder snapshot, or live on-chain if it bought after the snapshot. The holder then chooses which
+wallet gets the guaranteed spot.
 
-## How it works
+## Pieces
 
-1. `scripts/snapshot.mjs` reads every Transfer event of each partner contract over the
-   Robinhood Chain RPC and writes the current holders to `data/holders.json`.
-2. The site (`public/`) lists the collections. A collection becomes claimable once its snapshot has holders.
-3. `/api/verify` checks the pasted wallet against the snapshot.
-   `/api/claim` saves the holding wallet, the claim wallet and the X handle.
-   Each holding wallet can claim once per collection, and each claim wallet can only get one spot.
-4. `/admin` (needs `ADMIN_KEY`) shows every claim and downloads the CSV for the mint list.
+| Path | What |
+|---|---|
+| `collections.json` | Partner collections: chain, contract, OpenSea link, artwork, optional `spots` cap |
+| `data/holders.json` | Holder snapshot, made by `npm run snapshot` |
+| `public/` | The page (`index.html`), the admin page (`admin.html`) and the artwork |
+| `api/` | `collections`, `verify`, `claim` and `admin` (Vercel functions) |
+| `lib/core.js` | Holder checks, the live `balanceOf` check and claim storage |
 
-## Setup
+The rules are one claim per holding wallet per collection, one spot per receiving wallet, and one spot per X account.
 
-1. Put each contract address in `collections.json` and set `chain.rpc` to the Robinhood Chain RPC URL.
-   Optional fields per collection:
-   - `spots`: a cap on claims
-   - `minHeld`: the minimum NFTs held, default 1
-   - `startBlock`: the deploy block, which makes the snapshot faster
-   - `image`: a logo URL, otherwise coloured initials are shown
-2. Run `npm run snapshot`, then commit `data/holders.json`.
-   Run it again whenever you want a fresh snapshot.
-3. Deploy to Vercel. In the Vercel Marketplace, connect an **Upstash Redis** store, which sets the
-   `KV_REST_API_*` variables. Then set these environment variables:
-   - `ADMIN_KEY`: the password for `/admin`
-   - `WL_CLOSED=1` (optional): closes claims
+## Running on Vercel
+
+- **Storage:** claims are stored in a private Vercel Blob store, through `BLOB_READ_WRITE_TOKEN`.
+- **Admin page:** `/admin` needs `ADMIN_KEY` and has a CSV download for the mint list.
+- **Closing claims:** set `GTD_CLOSED=1`.
+- **Other RPCs:** set `RPC_ROBINHOOD` or `RPC_ETHEREUM` to use RPCs other than the default public ones.
+
+## Updating the holder snapshot
+
+```
+NODE_USE_ENV_PROXY=1 npm run snapshot    # or: npm run snapshot -- vaultlings rektguy
+```
+
+Commit `data/holders.json` afterwards, and the next deploy uses it.
 
 ## Local preview
 
 ```
-npm run dev   # http://localhost:3000
+npm install && npm run dev    # http://localhost:3000; claims go to data/claims.local.json
 ```
-
-Without Redis, claims are saved to `data/claims.local.json`.
