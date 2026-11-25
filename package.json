@@ -1,0 +1,10 @@
+{
+  "name": "niblekins-gtd-claim",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node dev-server.mjs",
+    "snapshot": "node scripts/snapshot.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

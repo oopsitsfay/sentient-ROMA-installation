@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Niblekins · Partner GTD Claim</title>
+<meta name="description" content="Hold an NFT from a Niblekins partner collection on Robinhood Chain? Verify your wallet and claim a GTD spot.">
+<meta property="og:title" content="Niblekins · Partner GTD Claim">
+<meta property="og:description" content="Partner holders: verify your wallet and claim a Niblekins GTD spot.">
+<meta property="og:image" content="/img/cap.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="https://niblekins.xyz">
+    <img src="/img/icon.png" alt="" width="36" height="36">
+    <span>Niblekins</span>
+  </a>
+  <a class="btn btn-primary btn-sm" href="https://x.com/niblekins" target="_blank" rel="noopener">Follow on X</a>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>Partner GTD claim</h1>
+    <p class="lead">Hold an NFT from one of our partner collections on Robinhood Chain? Claim a guaranteed Niblekins mint spot.</p>
+    <p class="muted">No wallet connection needed. You only paste wallet addresses.</p>
+  </section>
+
+  <section class="card hero">
+    <div class="hero-art" aria-hidden="true">
+      <img src="/img/cap.jpg" alt=""><img src="/img/pink.jpg" alt=""><img src="/img/green.jpg" alt="">
+    </div>
+    <div class="hero-body">
+      <div class="hero-title">
+        <h2>GTD claims are open</h2>
+        <span class="pill" id="status-pill"><i></i>Live</span>
+      </div>
+      <ol class="steps">
+        <li><b>Pick your collection</b> from the list below.</li>
+        <li><b>Paste the wallet that holds the NFT.</b> We check it against the holder snapshot.</li>
+        <li><b>Choose where your GTD goes:</b> the same wallet, or another one.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Partner collections</h2>
+      <span class="muted" id="col-count"></span>
+    </div>
+    <div class="grid" id="grid">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+  </section>
+
+  <section class="card faq">
+    <h2>Good to know</h2>
+    <details><summary>Which wallets count as holders?</summary><p>We take a snapshot of every holder of each collection on Robinhood Chain. If your wallet held the NFT when the snapshot was taken, you can claim. NFTs listed on a marketplace still count if they stayed in your wallet.</p></details>
+    <details><summary>Can I claim more than once?</summary><p>Each holding wallet can claim once per collection, and each claim wallet can only receive one GTD spot.</p></details>
+    <details><summary>Do I need to sign or pay anything?</summary><p>No. Nothing is connected and nothing is signed. Never share your seed phrase or private key; we will never ask for them.</p></details>
+    <details><summary>When is the mint?</summary><p>Follow <a href="https://x.com/niblekins" target="_blank" rel="noopener">@niblekins</a> on X for the date. Your claim wallet will be on the GTD list.</p></details>
+  </section>
+</main>
+
+<footer class="foot">
+  <img src="/img/lilac.jpg" alt="" width="44" height="44">
+  <span>Niblekins · Robinhood Chain</span>
+</footer>
+
+<!-- claim dialog -->
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <form method="dialog" class="dlg-close-row"><button class="icon-btn" aria-label="Close">✕</button></form>
+  <div class="dlg-head">
+    <div class="avatar lg" id="dlg-avatar"></div>
+    <div>
+      <h3 id="dlg-title"></h3>
+      <a id="dlg-x" class="muted" target="_blank" rel="noopener"></a>
+    </div>
+  </div>
+
+  <div id="step-verify">
+    <label for="holder">Wallet holding the NFT</label>
+    <input id="holder" class="input" placeholder="0x…" autocomplete="off" spellcheck="false" inputmode="text">
+    <p class="err" id="verify-err" role="alert"></p>
+    <button class="btn btn-primary wide" id="verify-btn">Verify holdings</button>
+  </div>
+
+  <div id="step-claim" hidden>
+    <div class="ok-row"><span class="check">✓</span><span>Holder verified: <b id="holder-short"></b></span></div>
+
+    <fieldset class="choice">
+      <legend>Where should your GTD spot go?</legend>
+      <label class="opt"><input type="radio" name="dest" value="same" checked><span>Same wallet</span></label>
+      <label class="opt"><input type="radio" name="dest" value="other"><span>Other wallet</span></label>
+    </fieldset>
+    <div id="claim-wrap" hidden>
+      <label for="claim">Wallet to receive the GTD</label>
+      <input id="claim" class="input" placeholder="0x…" autocomplete="off" spellcheck="false">
+    </div>
+
+    <label for="xh">Your X handle</label>
+    <div class="input-prefix"><span>@</span><input id="xh" class="input" placeholder="username" autocomplete="off" spellcheck="false"></div>
+
+    <p class="err" id="claim-err" role="alert"></p>
+    <button class="btn btn-primary wide" id="claim-btn">Claim GTD spot</button>
+    <button class="btn btn-ghost wide" id="back-btn">Use a different holding wallet</button>
+  </div>
+
+  <div id="step-done" hidden class="done">
+    <img src="/img/green.jpg" alt="" width="120" height="120">
+    <h3>You're on the GTD list</h3>
+    <p class="muted">Spot saved for</p>
+    <code id="done-wallet"></code>
+    <a class="btn btn-primary wide" id="share-btn" target="_blank" rel="noopener">Share on X</a>
+  </div>
+</dialog>
+
+<script src="/app.js" type="module"></script>
+</body>
+</html>

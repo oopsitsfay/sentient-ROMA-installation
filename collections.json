@@ -1,0 +1,19 @@
+{
+  "chain": {
+    "name": "Robinhood Chain",
+    "rpc": "PASTE_ROBINHOOD_CHAIN_RPC_URL"
+  },
+  "collections": [
+    { "id": "clutchmarkets", "name": "Clutch Markets", "x": "ClutchMarkets", "contract": "", "standard": "erc721", "color": "#2f9e74" },
+    { "id": "funkari", "name": "Funkari", "x": "FunkariNft", "contract": "", "standard": "erc721", "color": "#e0679a" },
+    { "id": "blokyz", "name": "Blokyz", "x": "OriginalBlokyz", "contract": "", "standard": "erc721", "color": "#3f7be0" },
+    { "id": "alphacentaurikid", "name": "Alpha Centauri Kid", "x": "lphaCentauriKid", "contract": "", "standard": "erc721", "color": "#7a52d6" },
+    { "id": "ccff00club", "name": "CCFF00 Club", "x": "CCFF00club", "contract": "", "standard": "erc721", "color": "#8fae00" },
+    { "id": "rektcoin", "name": "Rekt Coin", "x": "RektCoin", "contract": "", "standard": "erc721", "color": "#d6453d" },
+    { "id": "themutualfun", "name": "The Mutual Fun", "x": "themutualfun", "contract": "", "standard": "erc721", "color": "#e08a2c" },
+    { "id": "suitedapes", "name": "The Suited Apes", "x": "TheSuitedApes", "contract": "", "standard": "erc721", "color": "#4a4f63" },
+    { "id": "vaultlings", "name": "Vaultlings", "x": "VaultlingsNFT", "contract": "", "standard": "erc721", "color": "#2a8fa8" },
+    { "id": "robinwifhat", "name": "Robin Wif Hat", "x": "RobinWifHat", "contract": "", "standard": "erc721", "color": "#9a4ec2" },
+    { "id": "yieldfields", "name": "Yield Fields", "x": "YieldFields_Rh", "contract": "", "standard": "erc721", "color": "#4f9a3a" }
+  ]
+}

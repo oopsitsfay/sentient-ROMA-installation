@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Niblekins GTD Admin</title>
+<link rel="icon" href="/img/icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+  td.mono { font-family: ui-monospace, monospace; font-size: 13px; }
+  .scroll { overflow-x: auto; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row .input { flex: 1; min-width: 200px; }
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/"><img src="/img/icon.png" width="36" height="36" alt=""><span>GTD admin</span></a></header>
+<main>
+  <section class="card" style="margin-top:24px">
+    <label for="key">Admin key</label>
+    <div class="row"><input id="key" class="input" type="password"><button class="btn btn-primary" id="go">Load</button></div>
+    <p class="err" id="err"></p>
+  </section>
+  <section class="card" id="out" hidden>
+    <div class="section-head"><h2 id="total"></h2><a class="btn btn-primary btn-sm" id="csv">Download CSV</a></div>
+    <div class="scroll"><table id="per"></table></div>
+    <h2 style="margin:24px 0 8px">Claims</h2>
+    <div class="scroll"><table id="claims"></table></div>
+  </section>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+$('#key').value = sessionStorage.getItem('k') || '';
+$('#go').onclick = async () => {
+  const k = $('#key').value; $('#err').textContent = '';
+  const r = await fetch('/api/admin', { headers: { 'x-admin-key': k } });
+  const j = await r.json();
+  if (!r.ok) { $('#err').textContent = j.error; return; }
+  try { sessionStorage.setItem('k', k); } catch {}
+  $('#out').hidden = false;
+  $('#total').textContent = `${j.claims.length} claims`;
+  $('#csv').href = '/api/admin?format=csv&key=' + encodeURIComponent(k);
+  $('#per').innerHTML = '<tr><th>Collection</th><th>Holders in snapshot</th><th>Claimed</th></tr>' +
+    j.collections.map((c) => `<tr><td>${esc(c.name)}</td><td>${c.holders}</td><td>${c.claimed}</td></tr>`).join('');
+  $('#claims').innerHTML = '<tr><th>Claim wallet</th><th>Collection</th><th>Holding wallet</th><th>X</th><th>When</th></tr>' +
+    j.claims.slice().reverse().map((c) => `<tr><td class="mono">${esc(c.claimWallet)}</td><td>${esc(c.collection)}</td><td class="mono">${esc(c.holderWallet)}</td><td><a href="https://x.com/${esc(c.x)}" target="_blank" rel="noopener">@${esc(c.x)}</a></td><td>${esc(new Date(c.at).toLocaleString())}</td></tr>`).join('');
+};
+</script>
+</body>
+</html>
