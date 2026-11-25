@@ -1,10 +1,10 @@
-import { COLLECTIONS, OPEN, CHAIN_NAMES, claimable, claimCounts, snapshotCount, send, handle } from "../lib/core.js";
+import { COLLECTIONS, OPEN, STORAGE_READY, CHAIN_NAMES, claimable, claimCounts, snapshotCount, send, handle } from "../lib/core.js";
 
 // Public list of partner collections with spots claimed. Holder lists are never published.
 export default handle(async (req, res) => {
   let counts = {};
-  let storage = true;
-  try {
+  let storage = STORAGE_READY;
+  if (storage) try {
     counts = await claimCounts();
   } catch (err) {
     console.error("claim counts unavailable", err.message);

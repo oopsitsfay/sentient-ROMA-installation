@@ -1,9 +1,10 @@
-import { OPEN, getCollection, isAddress, holds, claimable, claimCounts, normalizeHandle, saveClaim, rateLimited, sameOrigin, readBody, send, handle } from "../lib/core.js";
+import { STORAGE_READY, OPEN, getCollection, isAddress, holds, claimable, claimCounts, normalizeHandle, saveClaim, rateLimited, sameOrigin, readBody, send, handle } from "../lib/core.js";
 
 // Step 2: record the GTD spot. Every check from /api/verify runs again here.
 export default handle(async (req, res) => {
   if (req.method !== "POST") return send(res, 405, { error: "method_not_allowed", message: "POST only" });
   if (!OPEN) return send(res, 403, { error: "closed", message: "GTD claims are closed." });
+  if (!STORAGE_READY) return send(res, 503, { error: "not_ready", message: "Claims open shortly. Try again in a few minutes." });
   if (!sameOrigin(req)) return send(res, 403, { error: "forbidden_origin", message: "Use the claim page." });
   if (rateLimited(req)) return send(res, 429, { error: "rate_limited", message: "Too many attempts. Wait a minute and try again." });
   const b = await readBody(req);

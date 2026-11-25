@@ -1,8 +1,9 @@
-import { getCollection, isAddress, holds, holderUsed, claimable, rateLimited, sameOrigin, readBody, send, handle } from "../lib/core.js";
+import { STORAGE_READY, getCollection, isAddress, holds, holderUsed, claimable, rateLimited, sameOrigin, readBody, send, handle } from "../lib/core.js";
 
 // Step 1: does this wallet hold the collection (snapshot, then live on-chain), and has it claimed with it yet?
 export default handle(async (req, res) => {
   if (req.method !== "POST") return send(res, 405, { error: "method_not_allowed", message: "POST only" });
+  if (!STORAGE_READY) return send(res, 503, { error: "not_ready", message: "Claims open shortly. Try again in a few minutes." });
   if (!sameOrigin(req)) return send(res, 403, { error: "forbidden_origin", message: "Use the claim page." });
   if (rateLimited(req)) return send(res, 429, { error: "rate_limited", message: "Too many attempts. Wait a minute and try again." });
   const { collection, holderWallet } = await readBody(req);
