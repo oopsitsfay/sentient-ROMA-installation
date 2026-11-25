@@ -49,8 +49,16 @@ $("#f").onsubmit = async (e) => {
   $("#csv").href = "/api/admin?format=csv&key=" + encodeURIComponent(k);
   $("#per").innerHTML = "<tr><th>Collection</th><th>Holders in snapshot</th><th>Claimed</th></tr>" +
     j.collections.map((c) => `<tr><td>${esc(c.name)}</td><td>${c.holders}</td><td>${c.claimed}</td></tr>`).join("");
-  $("#claims").innerHTML = "<tr><th>Claim wallet</th><th>Collection</th><th>Holding wallet</th><th>X</th><th>When</th></tr>" +
-    j.claims.slice().reverse().map((c) => `<tr><td class="mono">${esc(c.claimWallet)}</td><td>${esc(c.collection)}</td><td class="mono">${esc(c.holderWallet)}</td><td><a href="https://x.com/${esc(c.x)}" target="_blank" rel="noopener">@${esc(c.x)}</a></td><td>${esc(new Date(c.at).toLocaleString())}</td></tr>`).join("");
+  $("#claims").innerHTML = "<tr><th>Claim wallet</th><th>Collection</th><th>Holding wallet</th><th>X</th><th>When</th><th></th></tr>" +
+    j.claims.slice().reverse().map((c) => `<tr><td class="mono">${esc(c.claimWallet)}</td><td>${esc(c.collection)}</td><td class="mono">${esc(c.holderWallet)}</td><td><a href="https://x.com/${esc(c.x)}" target="_blank" rel="noopener">@${esc(c.x)}</a></td><td>${esc(new Date(c.at).toLocaleString())}</td><td><button class="btn btn-ghost" data-c="${esc(c.collection)}" data-h="${esc(c.holderWallet)}">Remove</button></td></tr>`).join("");
+  for (const b of document.querySelectorAll("button[data-h]")) {
+    b.onclick = async () => {
+      if (!confirm(`Remove the claim from ${b.dataset.h}? Its wallets and X account can then claim again.`)) return;
+      const r = await fetch("/api/admin", { method: "POST", headers: { "x-admin-key": k, "content-type": "application/json" }, body: JSON.stringify({ action: "remove", collection: b.dataset.c, holderWallet: b.dataset.h }) });
+      if (!r.ok) return alert((await r.json()).message);
+      $("#f").requestSubmit();
+    };
+  }
 };
 </script>
 </body>
